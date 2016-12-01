@@ -188,17 +188,17 @@ class BoletoData(object):
         """
 
         for attr, length, data_type in [
-                ('codigo_banco', 3, str),
-                ('moeda', 1, str),
+                ('codigo_banco', 3, (str, unicode)),
+                ('moeda', 1, (str, unicode)),
                 ('data_vencimento', None, datetime.date),
-                ('valor_documento', -1, str),
-                ('campo_livre', 25, str)]:
+                ('valor_documento', -1, (str, unicode)),
+                ('campo_livre', 25, (str, unicode))]:
             value = getattr(self, attr)
             if not isinstance(value, data_type):
                 raise TypeError("%s.%s must be a %s, got %r (type %s)" % (
                     self.__class__.__name__, attr, data_type.__name__, value,
                     type(value).__name__))
-            if (data_type == str and
+            if (data_type in (str, unicode) and
                     length != -1 and
                     len(value) != length):
                 raise ValueError(
@@ -342,7 +342,7 @@ class BoletoData(object):
         return self._instrucoes
 
     def _instrucoes_set(self, list_inst):
-        if isinstance(list_inst, str):
+        if isinstance(list_inst, (str, unicode)):
             list_inst = list_inst.splitlines()
 
         if len(list_inst) > 7:
@@ -366,7 +366,7 @@ class BoletoData(object):
         return self._demonstrativo
 
     def _demonstrativo_set(self, list_dem):
-        if isinstance(list_dem, str):
+        if isinstance(list_dem, (str, unicode)):
             list_dem = list_dem.splitlines()
 
         if len(list_dem) > 12:
@@ -451,7 +451,7 @@ class BoletoData(object):
 
     @staticmethod
     def modulo10(num):
-        if not isinstance(num, str):
+        if not isinstance(num, (str, unicode)):
             raise TypeError
         soma = 0
         peso = 2
@@ -476,7 +476,7 @@ class BoletoData(object):
 
     @staticmethod
     def modulo11(num, base=9, r=0):
-        if not isinstance(num, str):
+        if not isinstance(num, (str, unicode)):
             raise TypeError
         soma = 0
         fator = 2
